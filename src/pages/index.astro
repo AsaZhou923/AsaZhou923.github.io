@@ -1,0 +1,139 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveConsole from "../components/ArchiveConsole";
+import ExperienceCanvas from "../components/ExperienceCanvas.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../data/site";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const archivePosts = posts.map((post) => ({
+  title: post.data.title,
+  description: post.data.description,
+  url: `/posts/${post.id}/`,
+  category: post.data.category,
+  date: post.data.pubDate.toISOString().slice(0, 10).replaceAll("-", "."),
+  signal: post.data.signal,
+  accent: post.data.accent,
+  tags: post.data.tags
+}));
+---
+
+<BaseLayout>
+  <main>
+    <section class="hero" id="field">
+      <div class="hero__copy" data-motion="rise">
+        <p class="eyebrow">Signal Garden / 2026 rebuild</p>
+        <h1>
+          Asa Zhou
+          <span>把想法做成可运行的现场。</span>
+        </h1>
+        <p class="hero__lead">
+          这里不是普通博客，是一个带 WebGL 中枢、交互档案和长期写作系统的个人数字花园。
+          Building in public, thinking in code.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="#archive">进入档案库</a>
+          <a class="button button--ghost" href="#lab">查看实验</a>
+        </div>
+
+        <div class="hero__metrics" data-motion="rise">
+          <article>
+            <span>Stack</span>
+            <strong>Astro / React / Three</strong>
+          </article>
+          <article>
+            <span>Motion</span>
+            <strong>GSAP / Lenis</strong>
+          </article>
+          <article>
+            <span>Mode</span>
+            <strong>GitHub Pages</strong>
+          </article>
+        </div>
+      </div>
+
+      <div class="hero__stage" data-parallax="-10">
+        <ExperienceCanvas />
+        <div class="hero__hud hero__hud--top">
+          <span>WebGL Core</span>
+          <strong>r185</strong>
+        </div>
+        <div class="hero__hud hero__hud--bottom">
+          <span>Astro 7</span>
+          <strong>Static / Islands</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="manifest" data-motion="rise">
+      <div>
+        <p class="eyebrow">Manifest</p>
+        <h2>把博客做成一个可以被探索的空间。</h2>
+      </div>
+      <p>
+        灵感来自 Awwwards 级作品的沉浸叙事、Bruno Simon 式 WebGL 现场感、
+        Codrops 案例里的滚动动效系统。落地策略是：内容保持静态和可索引，
+        炫技层只在浏览器端渐进增强。
+      </p>
+    </section>
+
+    <ArchiveConsole posts={archivePosts} client:load />
+
+    <section class="lab" id="lab" aria-labelledby="lab-title">
+      <div class="section-heading" data-motion="rise">
+        <p class="eyebrow">Selected Lab</p>
+        <h2 id="lab-title">项目像仪器，不像卡片。</h2>
+      </div>
+      <div class="lab__grid">
+        {site.projects.map((project, index) => (
+          <article class={`lab-card lab-card--${index + 1}`} data-motion="rise" data-magnetic>
+            <span>{project.kicker}</span>
+            <h3>{project.name}</h3>
+            <p>{project.description}</p>
+            <strong>{project.metrics}</strong>
+            <ul>
+              {project.tags.map((tag) => <li>{tag}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="field-notes" aria-labelledby="notes-title">
+      <div class="section-heading" data-motion="rise">
+        <p class="eyebrow">Field Notes</p>
+        <h2 id="notes-title">写作方法公开运行。</h2>
+      </div>
+      <div class="note-rail">
+        <article data-motion="rise">
+          <time>01</time>
+          <h3>先把问题写清楚，再写结论。</h3>
+          <p>如果问题不清楚，文章越长越像噪音。</p>
+        </article>
+        <article data-motion="rise">
+          <time>02</time>
+          <h3>先能用，再变好看。</h3>
+          <p>作品要先产生实际反馈，再进入视觉打磨。</p>
+        </article>
+        <article data-motion="rise">
+          <time>03</time>
+          <h3>先记录真实过程，再整理成经验。</h3>
+          <p>过程里的失败和取舍，常常比最后截图更有价值。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="about" id="about" data-motion="rise" aria-labelledby="about-title">
+      <p class="eyebrow">About</p>
+      <h2 id="about-title">Developer, creator, and gardener of ideas.</h2>
+      <p>
+        我叫 Asa Zhou。我做开发，也做创作。这个站点记录技术实践、写作实验、
+        独立项目和正在生长的想法。它既是博客，也是一个持续更新的个人操作台。
+      </p>
+      <a class="button button--primary" href="mailto:hello@example.com">联系我</a>
+    </section>
+  </main>
+</BaseLayout>

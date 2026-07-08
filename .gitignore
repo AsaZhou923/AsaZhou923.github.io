@@ -1,2 +1,5 @@
 .omx/
 output/
+node_modules/
+dist/
+.astro/

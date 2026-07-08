@@ -1,0 +1,159 @@
+<canvas class="experience-canvas" id="experience-canvas" aria-hidden="true"></canvas>
+
+<script>
+  import * as THREE from "three";
+
+  const canvas = document.querySelector("#experience-canvas");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (canvas instanceof HTMLCanvasElement) {
+    const glCanvas = canvas;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    const renderer = new THREE.WebGLRenderer({ canvas: glCanvas, alpha: true, antialias: true });
+    const startTime = performance.now();
+    const pointer = new THREE.Vector2(0, 0);
+
+    camera.position.set(0, 0.2, 8);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
+
+    const palette = {
+      cyan: new THREE.Color("#6fffe9"),
+      gold: new THREE.Color("#d7a65a"),
+      red: new THREE.Color("#ff4d3d"),
+      ink: new THREE.Color("#071015")
+    };
+
+    const heroTexture = new THREE.TextureLoader().load("/assets/night-archive-hero.png");
+    heroTexture.colorSpace = THREE.SRGBColorSpace;
+
+    const coreMaterial = new THREE.MeshStandardMaterial({
+      color: palette.ink,
+      metalness: 0.86,
+      roughness: 0.18,
+      emissive: "#163a36",
+      emissiveIntensity: 0.65
+    });
+
+    const glassMaterial = new THREE.MeshPhysicalMaterial({
+      color: "#dffdf8",
+      metalness: 0.15,
+      roughness: 0.08,
+      transmission: 0.28,
+      thickness: 0.65,
+      transparent: true,
+      opacity: 0.36,
+      emissive: "#123d38",
+      emissiveIntensity: 0.18
+    });
+
+    const heroPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(7.2, 4.4, 24, 24),
+      new THREE.MeshBasicMaterial({
+        map: heroTexture,
+        transparent: true,
+        opacity: 0.28
+      })
+    );
+    heroPlane.position.set(0.8, -0.3, -2.4);
+    heroPlane.rotation.z = -0.04;
+    scene.add(heroPlane);
+
+    const core = new THREE.Mesh(new THREE.TorusKnotGeometry(1.05, 0.18, 160, 18), coreMaterial);
+    core.position.set(1.6, 0.04, 0.8);
+    scene.add(core);
+
+    const halo = new THREE.Mesh(new THREE.IcosahedronGeometry(1.78, 2), glassMaterial);
+    halo.position.copy(core.position);
+    scene.add(halo);
+
+    const ringMaterial = new THREE.LineBasicMaterial({
+      color: palette.gold,
+      transparent: true,
+      opacity: 0.5
+    });
+
+    for (let index = 0; index < 5; index += 1) {
+      const ring = new THREE.LineLoop(new THREE.BufferGeometry(), ringMaterial.clone());
+      const points = [];
+      const radius = 1.6 + index * 0.36;
+      for (let step = 0; step < 96; step += 1) {
+        const angle = (step / 96) * Math.PI * 2;
+        points.push(new THREE.Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius * 0.24, 0));
+      }
+      ring.geometry.setFromPoints(points);
+      ring.position.copy(core.position);
+      ring.rotation.set(index * 0.4, index * 0.28, index * 0.18);
+      scene.add(ring);
+    }
+
+    const particleCount = 920;
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+
+    for (let index = 0; index < particleCount; index += 1) {
+      const stride = index * 3;
+      const radius = 1.5 + Math.random() * 5.6;
+      const angle = Math.random() * Math.PI * 2;
+      positions[stride] = Math.cos(angle) * radius + 0.9;
+      positions[stride + 1] = (Math.random() - 0.5) * 4.6;
+      positions[stride + 2] = Math.sin(angle) * radius - 1.2;
+
+      const color = Math.random() > 0.72 ? palette.gold : Math.random() > 0.88 ? palette.red : palette.cyan;
+      colors[stride] = color.r;
+      colors[stride + 1] = color.g;
+      colors[stride + 2] = color.b;
+    }
+
+    const particles = new THREE.Points(
+      new THREE.BufferGeometry().setAttribute("position", new THREE.BufferAttribute(positions, 3)).setAttribute("color", new THREE.BufferAttribute(colors, 3)),
+      new THREE.PointsMaterial({
+        size: 0.028,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.86,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    scene.add(particles);
+
+    const keyLight = new THREE.PointLight("#78e6d2", 42, 15);
+    keyLight.position.set(2.4, 2.2, 3.6);
+    scene.add(keyLight);
+    scene.add(new THREE.AmbientLight("#ffffff", 0.18));
+
+    function resize() {
+      const rect = glCanvas.getBoundingClientRect();
+      renderer.setSize(rect.width, rect.height, false);
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
+    }
+
+    function animate() {
+      const elapsed = (performance.now() - startTime) / 1000;
+      const pace = reduceMotion ? 0.16 : 1;
+      core.rotation.x = elapsed * 0.18 * pace + pointer.y * 0.18;
+      core.rotation.y = elapsed * 0.34 * pace + pointer.x * 0.24;
+      halo.rotation.y = -elapsed * 0.08 * pace;
+      particles.rotation.y = elapsed * 0.025 * pace;
+      particles.rotation.x = pointer.y * 0.035;
+      heroPlane.position.x = 0.8 + pointer.x * 0.14;
+      heroPlane.position.y = -0.3 + pointer.y * 0.08;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener(
+      "pointermove",
+      (event: PointerEvent) => {
+        pointer.x = (event.clientX / window.innerWidth - 0.5) * 2;
+        pointer.y = -(event.clientY / window.innerHeight - 0.5) * 2;
+      },
+      { passive: true }
+    );
+
+    resize();
+    animate();
+  }
+</script>
