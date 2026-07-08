@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#071015">
+    <meta
+      name="description"
+      content="Asa Zhou 的个人博客、数字花园与项目档案，记录技术实践、产品思考和创作过程。"
+    >
+    <meta property="og:title" content="Asa Zhou | Night Archive">
+    <meta property="og:description" content="开发者 / 创作者 / 数字花园。Building in public, thinking in code.">
+    <meta property="og:image" content="assets/night-archive-hero.png">
+    <meta property="og:type" content="website">
+    <title>Asa Zhou | Night Archive</title>
+    <link rel="canonical" href="https://asazhou923.github.io/">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="alternate" type="application/rss+xml" title="Asa Zhou RSS" href="rss.xml">
+    <link rel="preload" as="image" href="assets/night-archive-hero.png">
+    <link rel="stylesheet" href="styles.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Asa Zhou Night Archive",
+        "url": "https://asazhou923.github.io/",
+        "description": "Asa Zhou 的个人博客、数字花园与项目档案。",
+        "inLanguage": "zh-CN",
+        "author": {
+          "@type": "Person",
+          "name": "Asa Zhou",
+          "url": "https://asazhou923.github.io/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="site-shell" id="top">
+      <div class="ambient-field" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
+
+      <header class="site-header" data-reveal>
+        <a class="brand-mark" href="#top" aria-label="Asa Zhou 首页">
+          <span class="brand-sigil">AZ</span>
+          <span>
+            <strong>Asa Zhou</strong>
+            <small>Night Archive</small>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="主导航">
+          <a href="#notes">文章</a>
+          <a href="#projects">项目</a>
+          <a href="#garden">笔记</a>
+          <a href="#about">关于</a>
+        </nav>
+
+        <a class="header-action" href="rss.xml" aria-label="订阅 RSS">
+          <span>RSS</span>
+        </a>
+      </header>
+
+      <main>
+        <section class="hero-section" aria-labelledby="hero-title">
+          <div class="hero-copy" data-reveal>
+            <p class="eyebrow">Digital garden / developer archive</p>
+            <h1 id="hero-title">Asa Zhou</h1>
+            <p class="hero-kicker">开发者 / 创作者 / 数字花园</p>
+            <p class="hero-lede">
+              用代码记录思考，用文章整理经验，用项目验证想法。
+              Building in public, thinking in code.
+            </p>
+
+            <div class="hero-actions" aria-label="主要入口">
+              <a class="button primary" href="#notes">浏览文章</a>
+              <a class="button ghost" href="#projects">查看项目</a>
+            </div>
+
+            <dl class="signal-grid" aria-label="站点概览">
+              <div>
+                <dt>003</dt>
+                <dd>Seed notes</dd>
+              </div>
+              <div>
+                <dt>003</dt>
+                <dd>Projects</dd>
+              </div>
+              <div>
+                <dt>2026</dt>
+                <dd>Archive online</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="hero-visual" data-reveal>
+            <img src="assets/night-archive-hero.png" alt="黑曜石色调的未来数字档案馆视觉">
+            <canvas id="constellation" aria-hidden="true"></canvas>
+            <div class="visual-hud top">
+              <span>Archive Core</span>
+              <strong>Live</strong>
+            </div>
+            <div class="visual-hud bottom">
+              <span>Signal</span>
+              <strong>78.6</strong>
+            </div>
+          </div>
+
+          <aside class="hero-rail" aria-label="当前档案">
+            <span>ASZ / LOG / 0001</span>
+            <span>Tokyo time</span>
+            <strong id="local-time">--:--</strong>
+          </aside>
+        </section>
+
+        <section class="intro-band" aria-labelledby="intro-title">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow">Manifest</p>
+            <h2 id="intro-title">我在这里做什么</h2>
+          </div>
+          <div class="intro-grid">
+            <article class="feature-panel large" data-reveal>
+              <span class="panel-index">01</span>
+              <h3>把想法变成可回看的结构</h3>
+              <p>
+                这是我的个人空间，既是博客，也是数字花园。我关注前端、工程效率、
+                独立创作，以及如何把想法变成可运行的东西。
+              </p>
+            </article>
+            <article class="feature-panel" data-reveal>
+              <span class="panel-index">02</span>
+              <h3>写作不是发布终点</h3>
+              <p>文章不追求频率，追求可复用、可回看、可继续生长。</p>
+            </article>
+            <article class="feature-panel accent" data-reveal>
+              <span class="panel-index">03</span>
+              <h3>small ideas, well documented.</h3>
+              <p>write it down, ship it, improve it.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="notes-section" id="notes" aria-labelledby="notes-title">
+          <div class="section-heading with-tools" data-reveal>
+            <div>
+              <p class="eyebrow">Latest Notes</p>
+              <h2 id="notes-title">最新文章</h2>
+              <p>记录最近一次思考，或者一个可以被复用的解决方案。</p>
+            </div>
+            <label class="search-box">
+              <span>Search</span>
+              <input id="post-search" type="search" placeholder="搜索标题、摘要或标签">
+            </label>
+          </div>
+
+          <div class="filter-row" aria-label="文章标签筛选" data-reveal>
+            <button class="filter-chip active" type="button" data-filter="all">全部</button>
+            <button class="filter-chip" type="button" data-filter="博客">博客</button>
+            <button class="filter-chip" type="button" data-filter="信息架构">信息架构</button>
+            <button class="filter-chip" type="button" data-filter="产品思考">产品思考</button>
+          </div>
+
+          <div class="post-grid" id="post-grid">
+            <article class="post-card featured" data-post-card data-tags="博客 静态站点 写作 数字花园 Frontend" data-reveal>
+              <a href="posts/build-a-blog.html" aria-label="阅读：从 0 搭一个个人博客">
+                <span class="post-date">2026.06.28</span>
+                <h3>从 0 搭一个个人博客：我希望它首先是一个“能长期写下去”的地方</h3>
+                <p>
+                  一个个人博客最重要的不是功能，而是写作阻力够不够低。
+                  这篇文章记录我如何给博客设定最小结构。
+                </p>
+                <span class="post-link">Read note</span>
+              </a>
+            </article>
+
+            <article class="post-card" data-post-card data-tags="信息架构 内容设计 Zettelkasten Writing Knowledge Base" data-reveal>
+              <a href="posts/digital-garden-layers.html" aria-label="阅读：数字花园不是随便堆笔记">
+                <span class="post-date">2026.07.03</span>
+                <h3>数字花园不是“随便堆笔记”：我给内容建立了 3 层分类</h3>
+                <p>
+                  数字花园如果没有结构，很容易变成失控的草稿堆。我把内容分成文章、
+                  笔记和项目三层。
+                </p>
+                <span class="post-link">Read note</span>
+              </a>
+            </article>
+
+            <article class="post-card" data-post-card data-tags="文案 产品思考 项目页 UI Copy Indie Making" data-reveal>
+              <a href="posts/project-copywriting.html" aria-label="阅读：我如何做个人项目的页面文案">
+                <span class="post-date">2026.07.08</span>
+                <h3>我如何做个人项目的页面文案：不写“功能说明”，先写“人会为什么在意”</h3>
+                <p>
+                  很多项目页写得像说明书，不像邀请。先写用户为什么在意，
+                  再写项目做了什么。
+                </p>
+                <span class="post-link">Read note</span>
+              </a>
+            </article>
+          </div>
+
+          <p class="empty-state" id="empty-state" hidden>没有匹配的文章，换一个关键词试试。</p>
+        </section>
+
+        <section class="projects-section" id="projects" aria-labelledby="projects-title">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow">Selected Projects</p>
+            <h2 id="projects-title">近期项目</h2>
+            <p>一些把想法落地的地方：工具、页面、实验、自动化流程。</p>
+          </div>
+
+          <div class="project-matrix">
+            <article class="project-card tall" data-reveal>
+              <span class="project-type">Knowledge system</span>
+              <h3>Garden Notes</h3>
+              <p>一个把文章、笔记和灵感连接起来的个人知识整理系统。</p>
+              <ul>
+                <li>Knowledge Management</li>
+                <li>Writing</li>
+                <li>Notes</li>
+              </ul>
+            </article>
+            <article class="project-card" data-reveal>
+              <span class="project-type">Web tools</span>
+              <h3>Tiny Tools</h3>
+              <p>一组小而实用的网页工具，解决日常开发和创作中的轻问题。</p>
+              <ul>
+                <li>Productivity</li>
+                <li>Frontend</li>
+              </ul>
+            </article>
+            <article class="project-card redline" data-reveal>
+              <span class="project-type">Public log</span>
+              <h3>Build in Public Log</h3>
+              <p>从想法、原型、失败、修正到发布，把推进过程公开记录下来。</p>
+              <ul>
+                <li>Indie Making</li>
+                <li>Process</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="garden-section" id="garden" aria-labelledby="garden-title">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow">Garden Notes</p>
+            <h2 id="garden-title">数字花园</h2>
+            <p>一些半成品想法、碎片思考、链接和观察。它们不一定完整，但都值得保留。</p>
+          </div>
+
+          <div class="garden-list">
+            <article data-reveal>
+              <time datetime="2026-07-08">07.08</time>
+              <h3>写作前先定义读者的下一步</h3>
+              <p>如果一段内容不能改变读者接下来的动作，它就还需要更清楚的结构。</p>
+            </article>
+            <article data-reveal>
+              <time datetime="2026-07-05">07.05</time>
+              <h3>项目页面应该像邀请，而不是说明书</h3>
+              <p>好的项目页先讲意义，再讲能力，最后才是功能列表。</p>
+            </article>
+            <article data-reveal>
+              <time datetime="2026-07-01">07.01</time>
+              <h3>数字花园的目标不是整齐</h3>
+              <p>它更像可生长的索引，让旧想法在新问题里重新出现。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="archive-section" id="archive" aria-labelledby="archive-title">
+          <div class="section-heading" data-reveal>
+            <p class="eyebrow">Archive</p>
+            <h2 id="archive-title">归档</h2>
+          </div>
+          <div class="timeline" data-reveal>
+            <a href="posts/project-copywriting.html">
+              <time datetime="2026-07-08">2026.07.08</time>
+              <span>我如何做个人项目的页面文案</span>
+            </a>
+            <a href="posts/digital-garden-layers.html">
+              <time datetime="2026-07-03">2026.07.03</time>
+              <span>数字花园不是“随便堆笔记”</span>
+            </a>
+            <a href="posts/build-a-blog.html">
+              <time datetime="2026-06-28">2026.06.28</time>
+              <span>从 0 搭一个个人博客</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="about-section" id="about" aria-labelledby="about-title">
+          <div class="about-card" data-reveal>
+            <p class="eyebrow">About</p>
+            <h2 id="about-title">Developer, creator, and gardener of ideas.</h2>
+            <p>
+              我叫 Asa Zhou。我做开发，也做创作。我相信好的个人网站不只是展示结果，
+              更是一个能持续积累思考、链接和作品的地方。
+            </p>
+            <p>
+              这里既是我的博客，也是数字花园：有完整文章，也有未完成的笔记；
+              有项目，也有关于如何写作、如何构建、如何表达的记录。
+            </p>
+            <a class="button primary" href="mailto:hello@example.com">联系我</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p>谢谢你来到这里。</p>
+        <p>This site grows slowly, deliberately, and in public.</p>
+      </footer>
+    </div>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

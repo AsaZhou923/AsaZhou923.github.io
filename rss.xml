@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Asa Zhou Night Archive</title>
+    <link>https://asazhou923.github.io/</link>
+    <description>Asa Zhou 的个人博客、数字花园与项目档案。</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 08 Jul 2026 00:00:00 +0900</lastBuildDate>
+    <item>
+      <title>我如何做个人项目的页面文案</title>
+      <link>https://asazhou923.github.io/posts/project-copywriting.html</link>
+      <guid>https://asazhou923.github.io/posts/project-copywriting.html</guid>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 +0900</pubDate>
+      <description>不写功能说明，先写人会为什么在意。</description>
+    </item>
+    <item>
+      <title>数字花园不是随便堆笔记</title>
+      <link>https://asazhou923.github.io/posts/digital-garden-layers.html</link>
+      <guid>https://asazhou923.github.io/posts/digital-garden-layers.html</guid>
+      <pubDate>Fri, 03 Jul 2026 00:00:00 +0900</pubDate>
+      <description>我给内容建立了 3 层分类。</description>
+    </item>
+    <item>
+      <title>从 0 搭一个个人博客</title>
+      <link>https://asazhou923.github.io/posts/build-a-blog.html</link>
+      <guid>https://asazhou923.github.io/posts/build-a-blog.html</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 +0900</pubDate>
+      <description>我希望它首先是一个能长期写下去的地方。</description>
+    </item>
+  </channel>
+</rss>

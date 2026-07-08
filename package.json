@@ -1,0 +1,10 @@
+{
+  "name": "asazhou923.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Asa Zhou personal blog and digital garden.",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "smoke": "node scripts/smoke-test.mjs"
+  }
+}

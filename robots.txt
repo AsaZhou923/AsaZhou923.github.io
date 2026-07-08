@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://asazhou923.github.io/sitemap.xml
