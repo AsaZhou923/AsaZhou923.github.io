@@ -1,0 +1,93 @@
+---
+import "../styles/global.css";
+import MotionRuntime from "../components/MotionRuntime.astro";
+import { site } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+  schema?: Record<string, unknown>;
+}
+
+const {
+  title = site.title,
+  description = site.description,
+  path = "/",
+  image = "/assets/night-archive-hero.png",
+  schema
+} = Astro.props;
+
+const canonical = new URL(path, site.url).toString();
+const schemaData =
+  schema ??
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "Asa Zhou Signal Garden",
+    url: site.url,
+    description,
+    inLanguage: "zh-CN",
+    author: {
+      "@type": "Person",
+      name: site.name,
+      url: site.url
+    }
+  };
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#05070a" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, site.url).toString()} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="Asa Zhou RSS" href="/rss.xml" />
+    <link rel="preload" as="image" href="/assets/night-archive-hero.png" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  </head>
+  <body>
+    <div class="cursor-field" aria-hidden="true"></div>
+    <div class="noise-field" aria-hidden="true"></div>
+    <div class="scan-field" aria-hidden="true"></div>
+
+    <header class="site-header" data-motion="drop">
+      <a class="brand" href="/" aria-label="Asa Zhou 首页">
+        <span class="brand__mark">AZ</span>
+        <span class="brand__copy">
+          <strong>Asa Zhou</strong>
+          <em>Signal Garden</em>
+        </span>
+      </a>
+
+      <nav class="nav-pills" aria-label="主导航">
+        {site.nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+
+      <a class="signal-button" href="/rss.xml">RSS</a>
+    </header>
+
+    <slot />
+
+    <footer class="site-footer" data-motion="rise">
+      <p>Built in public. Tuned for long memory.</p>
+      <nav aria-label="页脚链接">
+        <a href="/sitemap.xml">Sitemap</a>
+        <a href="/rss.xml">RSS</a>
+        <a href="https://github.com/AsaZhou923/AsaZhou923.github.io">GitHub</a>
+      </nav>
+    </footer>
+
+    <MotionRuntime />
+  </body>
+</html>

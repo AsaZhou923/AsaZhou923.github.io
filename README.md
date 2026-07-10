@@ -1,41 +1,33 @@
-# Asa Zhou Signal Garden
+# Asa Zhou — Liquid Archive
 
-一个 Astro 7 + React 19 + Three.js + GSAP + Lenis 重构后的个人博客、数字花园和项目档案。
+Asa Zhou 的个人博客与数字花园。新站以 Astro 的静态内容能力为核心，用 React 岛屿承载搜索交互、Three.js 负责 WebGL 场景、GSAP + Lenis 负责动效与滚动编排。
 
-## 本地预览
+## 本地开发
 
 ```bash
+npm install
 npm run dev
 ```
 
-默认地址是 `http://localhost:4321`。
+默认地址：`http://localhost:4321`。
 
-## 构建
-
-```bash
-npm run build
-```
-
-构建输出在 `dist/`，GitHub Actions 会自动部署到 GitHub Pages。
-
-## 验证
+## 验证与构建
 
 ```bash
 npm run build
 npm run smoke
 ```
 
-烟测会检查 Astro 源码结构、内容集合、核心交互组件、静态资源和构建产物。
+构建产物输出到 `dist/`，推送至 `main` 后由 GitHub Actions 部署到 GitHub Pages。
 
-## 结构
+## 内容与页面
 
-- `src/pages/`：页面和 RSS/sitemap endpoint
-- `src/content/posts/`：Markdown 文章内容集合
-- `src/components/`：React 交互岛、Three.js 体验层和动效运行时
-- `src/styles/global.css`：全站视觉系统
-- `public/assets/`：首屏视觉资产和 favicon
-- `.github/workflows/deploy.yml`：GitHub Pages 自动部署
+- `src/pages/`：首页、写作归档、关于、文章详情、RSS、sitemap 与 404
+- `src/content/posts/`：Markdown 文章内容
+- `src/components/`：搜索命令面板、归档筛选、WebGL 场景与动效运行时
+- `src/styles/global.css`：完整视觉系统、响应式与无动画降级
+- `public/assets/`：站点图标及社交分享视觉
 
-## 发布
+## 旧站封存
 
-在 GitHub 仓库 Settings → Pages 中选择 GitHub Actions 作为 Source。推送到 `main` 后会自动构建并部署。
+上一版 Signal Garden 的完整源码快照位于 `_archive/signal-garden-v1/`。该目录不属于 Astro 的页面或静态资源入口，不会被构建或发布。

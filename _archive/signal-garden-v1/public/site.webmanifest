@@ -1,0 +1,16 @@
+{
+  "name": "Asa Zhou Signal Garden",
+  "short_name": "Asa Zhou",
+  "description": "Personal blog, digital garden, and project archive.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070a",
+  "theme_color": "#05070a",
+  "icons": [
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    }
+  ]
+}

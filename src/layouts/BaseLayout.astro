@@ -1,6 +1,8 @@
 ---
-import "../styles/global.css";
+import { getCollection } from "astro:content";
+import CommandPalette from "../components/CommandPalette";
 import MotionRuntime from "../components/MotionRuntime.astro";
+import "../styles/global.css";
 import { site } from "../data/site";
 
 interface Props {
@@ -8,84 +10,174 @@ interface Props {
   description?: string;
   path?: string;
   image?: string;
-  schema?: Record<string, unknown>;
+  type?: "website" | "article";
+  page?: "home" | "writing" | "about" | "article" | "error";
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title = site.title,
   description = site.description,
   path = "/",
-  image = "/assets/night-archive-hero.png",
+  image = "/assets/og-card.png",
+  type = "website",
+  page = "home",
   schema
 } = Astro.props;
 
 const canonical = new URL(path, site.url).toString();
-const schemaData =
-  schema ??
-  {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    name: "Asa Zhou Signal Garden",
+const socialImage = new URL(image, site.url).toString();
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const commandEntries = [
+  { title: "首页 / Threshold", description: "回到液态档案馆入口", href: "/", meta: "PAGE", keywords: ["home", "首页"] },
+  { title: "写作 / Archive", description: "检索全部文章与主题", href: "/writing/", meta: "PAGE", keywords: ["writing", "文章", "归档"] },
+  { title: "关于 / About", description: "关于 Asa、方法与正在做的事", href: "/about/", meta: "PAGE", keywords: ["about", "关于"] },
+  ...posts.map((post) => ({
+    title: post.data.title,
+    description: post.data.description,
+    href: `/posts/${post.id}/`,
+    meta: post.data.category.toUpperCase(),
+    keywords: post.data.tags
+  }))
+];
+
+const schemaData = schema ?? {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: site.title,
+  url: site.url,
+  description,
+  inLanguage: site.language,
+  author: {
+    "@type": "Person",
+    name: site.name,
     url: site.url,
-    description,
-    inLanguage: "zh-CN",
-    author: {
-      "@type": "Person",
-      name: site.name,
-      url: site.url
-    }
-  };
+    sameAs: [site.social[0].href]
+  }
+};
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={site.language} data-aura="acid">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#05070a" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#070806" />
+    <meta name="color-scheme" content="dark" />
+    <meta property="og:site_name" content="Asa Zhou — Liquid Archive" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(image, site.url).toString()} />
-    <meta property="og:type" content="website" />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title="Asa Zhou RSS" href="/rss.xml" />
-    <link rel="preload" as="image" href="/assets/night-archive-hero.png" />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Newsreader:opsz,wght@6..72,300..700&family=Noto+Sans+SC:wght@300;400;500;600;700;800&family=Noto+Serif+SC:wght@400;500;600;700;800&display=swap"
+    />
+    <script is:inline>
+      try {
+        document.documentElement.dataset.aura = localStorage.getItem("az-aura") === "ember" ? "ember" : "acid";
+      } catch {}
+    </script>
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
   </head>
-  <body>
-    <div class="cursor-field" aria-hidden="true"></div>
-    <div class="noise-field" aria-hidden="true"></div>
-    <div class="scan-field" aria-hidden="true"></div>
+  <body data-page={page}>
+    <a class="skip-link" href="#main-content">跳到正文</a>
 
-    <header class="site-header" data-motion="drop">
-      <a class="brand" href="/" aria-label="Asa Zhou 首页">
-        <span class="brand__mark">AZ</span>
-        <span class="brand__copy">
-          <strong>Asa Zhou</strong>
-          <em>Signal Garden</em>
+    <div class="intro-curtain" aria-hidden="true">
+      <span class="intro-curtain__mark">AZ</span>
+      <span class="intro-curtain__line"></span>
+      <small>INDEXING MEMORY / 00</small>
+    </div>
+
+    <div class="global-noise" aria-hidden="true"></div>
+    <div class="global-glow" aria-hidden="true"></div>
+    <div class="page-progress" data-page-progress aria-hidden="true"><span></span></div>
+    <div class="cursor-dot" data-cursor-dot aria-hidden="true"><span></span></div>
+
+    <header class="site-header" data-site-header>
+      <a class="site-brand" href="/" aria-label="Asa Zhou 首页" data-cursor="HOME">
+        <svg class="site-brand__aperture" viewBox="0 0 44 44" aria-hidden="true">
+          <circle cx="22" cy="22" r="18.5" />
+          <circle cx="22" cy="22" r="8" />
+          <path d="M22 3.5v6M40.5 22h-6M22 40.5v-6M3.5 22h6" />
+        </svg>
+        <span>
+          <strong>ASA ZHOU</strong>
+          <small>Liquid Archive</small>
         </span>
       </a>
 
-      <nav class="nav-pills" aria-label="主导航">
-        {site.nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <nav class="site-nav" aria-label="主导航">
+        {site.nav.map((item, index) => (
+          <a class={path === item.href ? "is-current" : ""} href={item.href}>
+            <span>0{index + 1}</span>{item.label}
+          </a>
+        ))}
       </nav>
 
-      <a class="signal-button" href="/rss.xml">RSS</a>
+      <div class="site-actions">
+        <button class="aura-toggle" data-aura-toggle type="button">
+          <span aria-hidden="true"></span>
+        </button>
+        <CommandPalette entries={commandEntries} client:load />
+      </div>
+
+      <details class="site-menu">
+        <summary aria-label="打开导航"><span></span><span></span></summary>
+        <div>
+          <p>Navigate / 导航</p>
+          {site.nav.map((item, index) => (
+            <a href={item.href}><span>0{index + 1}</span>{item.label}</a>
+          ))}
+          <a href="/rss.xml"><span>04</span>RSS</a>
+        </div>
+      </details>
     </header>
 
     <slot />
 
-    <footer class="site-footer" data-motion="rise">
-      <p>Built in public. Tuned for long memory.</p>
-      <nav aria-label="页脚链接">
-        <a href="/sitemap.xml">Sitemap</a>
-        <a href="/rss.xml">RSS</a>
-        <a href="https://github.com/AsaZhou923/AsaZhou923.github.io">GitHub</a>
-      </nav>
+    <footer class="site-footer" data-reveal>
+      <div class="site-footer__top">
+        <p>Keep a signal.<br />Leave a trace.</p>
+        <a class="footer-orbit" href="/writing/" aria-label="进入写作档案" data-cursor="ENTER">
+          <span>ENTER ARCHIVE</span>
+          <svg viewBox="0 0 88 88" aria-hidden="true">
+            <circle cx="44" cy="44" r="38" />
+            <path d="M29 44h30M51 36l8 8-8 8" />
+          </svg>
+        </a>
+      </div>
+
+      <div class="site-footer__wordmark" aria-hidden="true">
+        <span>ASA</span><span>ZHOU</span>
+      </div>
+
+      <div class="site-footer__bottom">
+        <p>© {new Date().getFullYear()} Asa Zhou<br />Built with intention.</p>
+        <nav aria-label="页脚链接">
+          {site.social.map((item) => <a href={item.href}>{item.label}</a>)}
+          <a href="/sitemap.xml">Sitemap</a>
+        </nav>
+        <p>Open web / Online<br />Signal origin: digital</p>
+      </div>
     </footer>
 
     <MotionRuntime />

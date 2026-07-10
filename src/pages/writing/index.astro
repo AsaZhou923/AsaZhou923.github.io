@@ -1,0 +1,58 @@
+---
+import { getCollection } from "astro:content";
+import WritingExplorer from "../../components/WritingExplorer";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const writingPosts = posts.map((post) => ({
+  title: post.data.title,
+  description: post.data.description,
+  href: `/posts/${post.id}/`,
+  category: post.data.category,
+  date: post.data.pubDate.toISOString().slice(0, 10),
+  year: post.data.pubDate.getFullYear(),
+  signal: post.data.signal,
+  accent: post.data.accent,
+  tags: post.data.tags,
+  featured: post.data.featured
+}));
+---
+
+<BaseLayout
+  title="写作档案 | Asa Zhou"
+  description="检索 Asa Zhou 关于前端开发、产品思考、独立创作与数字花园的全部文章。"
+  path="/writing/"
+  page="writing"
+>
+  <main id="main-content" class="writing-page">
+    <header class="writing-hero">
+      <div class="writing-hero__meta" data-hero-fade>
+        <span>INDEX / 01</span>
+        <span>{String(posts.length).padStart(2, "0")} SIGNALS</span>
+        <span>2026 — ∞</span>
+      </div>
+      <div class="writing-hero__title">
+        <span class="title-clip"><span data-hero-line>WRITING</span></span>
+        <h1 class="title-clip"><span data-hero-line>写作档案</span></h1>
+      </div>
+      <div class="writing-hero__note" data-hero-fade>
+        <p>把复杂问题写清楚，把短暂思考保存得更久。</p>
+        <span>Articles · Notes · Process · Experiments</span>
+      </div>
+      <div class="writing-hero__aperture" aria-hidden="true" data-parallax="-8">
+        <span></span><span></span><span></span>
+      </div>
+    </header>
+
+    <WritingExplorer posts={writingPosts} client:load />
+
+    <section class="archive-note" data-reveal>
+      <span>RSS / ALWAYS ON</span>
+      <p>如果你更喜欢安静地跟进更新，可以订阅 RSS。没有算法，没有推送焦虑。</p>
+      <a href="/rss.xml">订阅信号 <b>↗</b></a>
+    </section>
+  </main>
+</BaseLayout>

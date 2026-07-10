@@ -4,9 +4,7 @@ import { site } from "../data/site";
 export async function GET() {
   const posts = await getCollection("posts");
   const urls = [
-    { loc: `${site.url}/`, lastmod: "2026-07-10" },
-    { loc: `${site.url}/writing/`, lastmod: "2026-07-10" },
-    { loc: `${site.url}/about/`, lastmod: "2026-07-10" },
+    { loc: `${site.url}/`, lastmod: "2026-07-08" },
     ...posts.map((post) => ({
       loc: `${site.url}/posts/${post.id}/`,
       lastmod: (post.data.updatedDate ?? post.data.pubDate).toISOString().slice(0, 10)

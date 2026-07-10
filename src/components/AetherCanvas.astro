@@ -1,0 +1,304 @@
+<div class="aether-scene" data-aether-scene aria-hidden="true">
+  <div class="aperture-fallback">
+    <span></span><span></span><span></span>
+  </div>
+  <canvas class="aether-canvas"></canvas>
+  <div class="aether-coordinates aether-coordinates--left">OPEN WEB<br />ORIGIN / ∞</div>
+  <div class="aether-coordinates aether-coordinates--right">MEMORY<br />APERTURE / 01</div>
+</div>
+
+<script>
+  import * as THREE from "three";
+
+  const vertexShader = /* glsl */ `
+    uniform float uTime;
+    uniform vec2 uPointer;
+    varying vec3 vNormal;
+    varying vec3 vViewPosition;
+    varying float vWave;
+
+    void main() {
+      float radial = sin(position.x * 2.8 + uTime * 0.72);
+      float crossWave = sin(position.y * 4.1 - uTime * 0.48);
+      float pointerWave = sin((position.x + uPointer.x) * 3.2 + (position.y - uPointer.y) * 2.1);
+      float wave = (radial * 0.045) + (crossWave * 0.028) + (pointerWave * 0.018);
+      vec3 transformed = position + normal * wave;
+      vec4 mvPosition = modelViewMatrix * vec4(transformed, 1.0);
+      vNormal = normalize(normalMatrix * normal);
+      vViewPosition = -mvPosition.xyz;
+      vWave = wave;
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  `;
+
+  const fragmentShader = /* glsl */ `
+    uniform float uTime;
+    uniform vec3 uAcid;
+    uniform vec3 uEmber;
+    varying vec3 vNormal;
+    varying vec3 vViewPosition;
+    varying float vWave;
+
+    void main() {
+      vec3 normal = normalize(vNormal);
+      vec3 viewDirection = normalize(vViewPosition);
+      float fresnel = pow(1.0 - abs(dot(normal, viewDirection)), 2.4);
+      float spectral = sin((normal.x + normal.y) * 8.0 + uTime * 0.34) * 0.5 + 0.5;
+      vec3 graphite = vec3(0.055, 0.057, 0.052);
+      vec3 titanium = vec3(0.63, 0.61, 0.57);
+      vec3 color = mix(graphite, titanium, smoothstep(0.05, 0.92, fresnel + vWave * 4.0));
+      color = mix(color, uEmber, spectral * fresnel * 0.34);
+      color = mix(color, uAcid, pow(fresnel, 4.0) * 0.62);
+      float highlight = pow(max(dot(normal, normalize(vec3(-0.5, 0.8, 0.7))), 0.0), 16.0);
+      color += highlight * vec3(1.0, 0.96, 0.86) * 1.8;
+      gl_FragColor = vec4(color, 0.98);
+    }
+  `;
+
+  const irisVertex = /* glsl */ `
+    uniform float uTime;
+    uniform vec2 uPointer;
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      vec3 p = position;
+      p.z += sin((position.x + uPointer.x) * 2.8 + uTime * 0.45) * 0.04;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+    }
+  `;
+
+  const irisFragment = /* glsl */ `
+    uniform float uTime;
+    uniform vec2 uPointer;
+    uniform vec3 uAcid;
+    uniform vec3 uEmber;
+    varying vec2 vUv;
+
+    float circle(vec2 uv, float radius, float blur) {
+      return 1.0 - smoothstep(radius - blur, radius + blur, length(uv));
+    }
+
+    void main() {
+      vec2 uv = vUv - 0.5;
+      uv.x += uPointer.x * 0.035;
+      uv.y += uPointer.y * 0.025;
+      float dist = length(uv);
+      float rings = sin(dist * 64.0 - uTime * 0.8) * 0.5 + 0.5;
+      float veil = circle(uv, 0.48, 0.06);
+      vec3 base = mix(vec3(0.015, 0.017, 0.015), uEmber * 0.22, smoothstep(0.46, 0.0, dist));
+      base += uAcid * rings * 0.065 * veil;
+      base += vec3(0.72, 0.82, 1.0) * pow(max(0.0, 1.0 - dist * 2.0), 6.0) * 0.26;
+      float alpha = veil * (0.72 - dist * 0.55);
+      gl_FragColor = vec4(base, alpha);
+    }
+  `;
+
+  document.querySelectorAll<HTMLElement>("[data-aether-scene]:not([data-initialized])").forEach((host) => {
+    host.dataset.initialized = "true";
+    const canvas = host.querySelector("canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const saveData = Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+    let renderer: THREE.WebGLRenderer;
+
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: !saveData,
+        powerPreference: "high-performance"
+      });
+    } catch {
+      host.classList.add("is-fallback");
+      return;
+    }
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+    camera.position.set(0, 0, 9.2);
+
+    const initialAura = document.documentElement.dataset.aura === "ember" ? "ember" : "acid";
+    const sharedUniforms = {
+      uTime: { value: 0 },
+      uPointer: { value: new THREE.Vector2(0, 0) },
+      uAcid: { value: new THREE.Color(initialAura === "ember" ? "#ff8b5f" : "#d9ff57") },
+      uEmber: { value: new THREE.Color(initialAura === "ember" ? "#ff3d24" : "#7aa7ff") }
+    };
+
+    const applyAura = (mode: string) => {
+      const ember = mode === "ember";
+      sharedUniforms.uAcid.value.set(ember ? "#ff8b5f" : "#d9ff57");
+      sharedUniforms.uEmber.value.set(ember ? "#ff3d24" : "#7aa7ff");
+    };
+
+    const mobile = window.matchMedia("(max-width: 720px)").matches;
+    const aperture = new THREE.Mesh(
+      new THREE.TorusGeometry(2.35, 0.5, mobile ? 32 : 56, mobile ? 120 : 220),
+      new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        uniforms: sharedUniforms
+      })
+    );
+    aperture.rotation.set(0.14, -0.32, -0.16);
+    scene.add(aperture);
+
+    const iris = new THREE.Mesh(
+      new THREE.CircleGeometry(2.08, mobile ? 64 : 128),
+      new THREE.ShaderMaterial({
+        vertexShader: irisVertex,
+        fragmentShader: irisFragment,
+        uniforms: sharedUniforms,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      })
+    );
+    iris.position.z = -0.18;
+    iris.rotation.z = 0.12;
+    scene.add(iris);
+
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: "#f1ece2", transparent: true, opacity: 0.18 });
+    const outerRing = new THREE.Mesh(new THREE.TorusGeometry(3.05, 0.008, 8, 180), ringMaterial);
+    outerRing.rotation.set(0.34, 0.22, 0.08);
+    scene.add(outerRing);
+
+    const orbitMaterial = new THREE.MeshBasicMaterial({ color: "#d9ff57", transparent: true, opacity: 0.35 });
+    const orbit = new THREE.Mesh(new THREE.TorusGeometry(2.73, 0.012, 8, 180, Math.PI * 1.48), orbitMaterial);
+    orbit.rotation.set(-0.42, -0.18, 0.28);
+    scene.add(orbit);
+
+    const particleCount = saveData ? 100 : mobile ? 240 : 520;
+    const positions = new Float32Array(particleCount * 3);
+    for (let index = 0; index < particleCount; index += 1) {
+      const stride = index * 3;
+      const radius = 3 + Math.random() * 4.8;
+      const angle = Math.random() * Math.PI * 2;
+      positions[stride] = Math.cos(angle) * radius;
+      positions[stride + 1] = (Math.random() - 0.5) * 6.5;
+      positions[stride + 2] = Math.sin(angle) * radius - 2.4;
+    }
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    const particleMaterial = new THREE.PointsMaterial({
+      color: "#f1ece2",
+      size: mobile ? 0.015 : 0.022,
+      transparent: true,
+      opacity: 0.52,
+      depthWrite: false
+    });
+    const particles = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(particles);
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.2 : 1.6));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(0x000000, 0);
+
+    const targetPointer = new THREE.Vector2();
+    let active = true;
+    let frame = 0;
+    const startTime = performance.now();
+
+    const resize = () => {
+      const rect = host.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      renderer.setSize(rect.width, rect.height, false);
+      camera.aspect = rect.width / rect.height;
+      camera.updateProjectionMatrix();
+      renderFrame();
+    };
+
+    const renderFrame = () => {
+      sharedUniforms.uPointer.value.lerp(targetPointer, 0.045);
+      if (!reduceMotion) sharedUniforms.uTime.value = (performance.now() - startTime) / 1000;
+      aperture.rotation.y += reduceMotion ? 0 : 0.0014;
+      aperture.rotation.x = 0.14 + sharedUniforms.uPointer.value.y * 0.08;
+      aperture.rotation.z = -0.16 + sharedUniforms.uPointer.value.x * 0.06;
+      outerRing.rotation.z -= reduceMotion ? 0 : 0.0007;
+      orbit.rotation.z += reduceMotion ? 0 : 0.0011;
+      particles.rotation.y += reduceMotion ? 0 : 0.00018;
+      renderer.render(scene, camera);
+    };
+
+    const animate = () => {
+      if (!active || reduceMotion) return;
+      renderFrame();
+      frame = requestAnimationFrame(animate);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      const rect = host.getBoundingClientRect();
+      targetPointer.set(
+        ((event.clientX - rect.left) / rect.width - 0.5) * 2,
+        -((event.clientY - rect.top) / rect.height - 0.5) * 2
+      );
+    };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      active = entry.isIntersecting && !document.hidden;
+      cancelAnimationFrame(frame);
+      if (active && !reduceMotion) animate();
+    }, { rootMargin: "120px" });
+
+    const onVisibility = () => {
+      active = !document.hidden && host.getBoundingClientRect().bottom > -120;
+      cancelAnimationFrame(frame);
+      if (active && !reduceMotion) animate();
+    };
+
+    const onAura = (event: Event) => {
+      applyAura((event as CustomEvent<string>).detail);
+    };
+
+    const destroy = () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("aura-change", onAura);
+      window.removeEventListener("pagehide", onPageHide);
+      window.removeEventListener("pageshow", onPageShow);
+      aperture.geometry.dispose();
+      (aperture.material as THREE.Material).dispose();
+      iris.geometry.dispose();
+      (iris.material as THREE.Material).dispose();
+      outerRing.geometry.dispose();
+      orbit.geometry.dispose();
+      ringMaterial.dispose();
+      orbitMaterial.dispose();
+      particleGeometry.dispose();
+      particleMaterial.dispose();
+      renderer.dispose();
+    };
+
+    const onPageHide = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        active = false;
+        cancelAnimationFrame(frame);
+        return;
+      }
+      destroy();
+    };
+
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      active = !document.hidden && host.getBoundingClientRect().bottom > -120;
+      resize();
+      if (active && !reduceMotion) animate();
+    };
+
+    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("aura-change", onAura);
+    window.addEventListener("pagehide", onPageHide);
+    window.addEventListener("pageshow", onPageShow);
+    observer.observe(host);
+    resize();
+    host.classList.add("is-webgl");
+    if (reduceMotion) renderFrame();
+    else animate();
+  });
+</script>

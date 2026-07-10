@@ -2,13 +2,21 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="404 | Asa Zhou" description="这份档案还没有建立。" path="/404">
-  <main class="error-page">
-    <section class="about" data-motion="rise">
-      <p class="eyebrow">404 / Missing signal</p>
-      <h1>这份档案还没有建立。</h1>
-      <p>你访问的页面不存在，可能是链接已经移动，或者这个想法还在路上。</p>
-      <a class="button button--primary" href="/">回到 Signal Garden</a>
-    </section>
+<BaseLayout
+  title="404 — Signal Lost | Asa Zhou"
+  description="这条信号没有被记录。"
+  path="/404"
+  page="error"
+>
+  <main id="main-content" class="error-page">
+    <div class="error-aperture" aria-hidden="true">
+      <span></span><span></span><strong>404</strong>
+    </div>
+    <div class="error-copy">
+      <p data-hero-fade>SIGNAL LOST / 未找到记录</p>
+      <h1 class="title-clip"><span data-hero-line>走进了一段<br />没有信号的黑暗。</span></h1>
+      <span data-hero-fade>链接可能已经移动，或者这个想法还没有被写下来。</span>
+      <a class="action-link action-link--solid" href="/" data-hero-fade>回到档案馆 <b>→</b></a>
+    </div>
   </main>
 </BaseLayout>

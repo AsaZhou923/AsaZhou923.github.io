@@ -1,20 +1,31 @@
 ---
 import { getCollection, render } from "astro:content";
+import ShareActions from "../../components/ShareActions";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { site } from "../../data/site";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post }
-  }));
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
-const title = `${post.data.title} | ${site.name}`;
+const { Content, headings } = await render(post);
+const allPosts = (await getCollection("posts")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const currentIndex = allPosts.findIndex((entry) => entry.id === post.id);
+const previousPost = allPosts[currentIndex + 1];
+const nextPost = allPosts[currentIndex - 1];
 const path = `/posts/${post.id}/`;
+const canonical = new URL(path, site.url).toString();
+const title = `${post.data.title} | ${site.name}`;
+const bodyLength = post.body?.replace(/\s/g, "").length ?? 1200;
+const readingMinutes = Math.max(3, Math.ceil(bodyLength / 420));
+const published = new Intl.DateTimeFormat("zh-CN", {
+  year: "numeric", month: "long", day: "numeric"
+}).format(post.data.pubDate);
+const titleLines = post.data.titleLines ?? [post.data.title];
 const schema = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
@@ -23,33 +34,98 @@ const schema = {
   datePublished: post.data.pubDate.toISOString(),
   dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
   inLanguage: "zh-CN",
-  author: {
-    "@type": "Person",
-    name: site.name
-  },
-  mainEntityOfPage: new URL(path, site.url).toString()
+  keywords: post.data.tags.join(", "),
+  author: { "@type": "Person", name: site.name, url: site.url },
+  publisher: { "@type": "Person", name: site.name },
+  mainEntityOfPage: canonical
 };
 ---
 
-<BaseLayout title={title} description={post.data.description} path={path} schema={schema}>
-  <main class="article-page">
-    <nav class="article-nav" aria-label="文章导航">
-      <a href="/">← Signal Garden</a>
-      <a href="/#archive">Archive Console</a>
-    </nav>
+<BaseLayout
+  title={title}
+  description={post.data.description}
+  path={path}
+  type="article"
+  page="article"
+  schema={schema}
+>
+  <main id="main-content" class={`article-page article-page--${post.data.accent}`}>
+    <header class="article-cover">
+      <div class="article-cover__meta" data-hero-fade>
+        <a href="/writing/">← 返回写作档案</a>
+        <span>ARTICLE / {String(currentIndex + 1).padStart(2, "0")}</span>
+        <span>SIGNAL {post.data.signal}</span>
+      </div>
 
-    <header class={`article-hero article-hero--${post.data.accent}`} data-motion="rise">
-      <p class="eyebrow">{post.data.category} / {post.data.signal} signal</p>
-      <h1>{post.data.title}</h1>
-      <p>{post.data.description}</p>
-      <ul>
-        <li>{post.data.pubDate.toISOString().slice(0, 10)}</li>
-        {post.data.tags.map((tag) => <li>{tag}</li>)}
-      </ul>
+      <div class="article-cover__grid">
+        <div class="article-cover__copy">
+          <p data-hero-fade>{post.data.category} · {published} · {readingMinutes} 分钟阅读</p>
+          <h1>
+            {titleLines.map((line) => (
+              <span class="title-clip">
+                <span data-hero-line>{line}</span>
+              </span>
+            ))}
+          </h1>
+          <span class="article-cover__description" data-hero-fade>{post.data.description}</span>
+          <ul data-hero-fade>{post.data.tags.map((tag) => <li>{tag}</li>)}</ul>
+        </div>
+
+        <div class="article-cover__art" aria-hidden="true" data-parallax="-7">
+          <span class="article-orbit article-orbit--one"></span>
+          <span class="article-orbit article-orbit--two"></span>
+          <span class="article-orbit article-orbit--core"></span>
+          <strong>{post.data.signal}</strong>
+          <small>MEMORY APERTURE<br />{post.data.accent.toUpperCase()} CHANNEL</small>
+        </div>
+      </div>
     </header>
 
-    <article class="article-body" data-motion="rise">
-      <Content />
-    </article>
+    <div class="article-shell">
+      <aside class="article-aside" aria-label="文章目录" data-reveal>
+        <div class="reading-dial" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" /><circle cx="24" cy="24" r="20" /></svg>
+          <span>{readingMinutes}<small>MIN</small></span>
+        </div>
+        <p>ON THIS PAGE</p>
+        <nav>
+          {headings.filter((heading) => heading.depth === 2).map((heading, index) => (
+            <a href={`#${heading.slug}`}><span>0{index + 1}</span>{heading.text}</a>
+          ))}
+        </nav>
+        <ShareActions title={post.data.title} url={canonical} client:load />
+      </aside>
+
+      <article class="article-body" data-reveal>
+        <div class="article-body__lead">
+          <span>EDITOR’S NOTE</span>
+          <p>{post.data.description}</p>
+        </div>
+        <Content />
+      </article>
+    </div>
+
+    <section class="article-end" data-reveal>
+      <div class="article-end__mark" aria-hidden="true"><span></span><strong>AZ</strong></div>
+      <p>这条信号已经抵达终点。</p>
+      <a href="/writing/">返回全部档案 <span>↗</span></a>
+    </section>
+
+    <nav class="article-next" aria-label="相邻文章">
+      {previousPost ? (
+        <a href={`/posts/${previousPost.id}/`} data-reveal data-cursor="PREV">
+          <span>上一篇</span>
+          <strong>{previousPost.data.title}</strong>
+          <small>←</small>
+        </a>
+      ) : <span></span>}
+      {nextPost ? (
+        <a href={`/posts/${nextPost.id}/`} data-reveal data-cursor="NEXT">
+          <span>下一篇</span>
+          <strong>{nextPost.data.title}</strong>
+          <small>→</small>
+        </a>
+      ) : <span></span>}
+    </nav>
   </main>
 </BaseLayout>
