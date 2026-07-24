@@ -427,19 +427,14 @@ h3 {
   place-items: center;
 }
 
-.aura-toggle span {
-  position: relative;
-  width: 18px;
-  height: 18px;
-  border: 1px solid var(--accent);
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 4px var(--void), inset 0 0 0 8px var(--accent), 0 0 18px rgba(var(--accent-rgb), 0.38);
-  transition: rotate 500ms var(--ease-out), border-radius 400ms ease;
+.aura-toggle svg {
+  color: var(--accent);
+  filter: drop-shadow(0 0 8px rgba(var(--accent-rgb), 0.42));
+  transition: rotate 500ms var(--ease-out);
 }
 
-.aura-toggle:hover span {
+.aura-toggle:hover svg {
   rotate: 180deg;
-  border-radius: 35% 65% 60% 40%;
 }
 
 .command-trigger {
@@ -2227,11 +2222,14 @@ h3 {
 }
 
 .archive-note a {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
   font-size: 0.75rem;
   font-weight: 600;
 }
 
-.archive-note b { color: var(--accent); }
+.archive-note a svg { color: var(--accent); }
 
 /* About */
 .about-hero {
@@ -2625,6 +2623,12 @@ h3 {
   text-transform: uppercase;
 }
 
+.article-cover__meta a {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+}
+
 .article-cover__meta a:hover { color: var(--article-accent); }
 
 .article-cover__grid {
@@ -2992,12 +2996,15 @@ h3 {
 }
 
 .article-end a {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
   border-bottom: 1px solid var(--void);
   font-size: .74rem;
   font-weight: 600;
 }
 
-.article-end a span { color: var(--article-accent); }
+.article-end a svg { color: var(--article-accent); }
 
 .article-next {
   display: grid;
@@ -3039,6 +3046,12 @@ h3 {
   right: 40px;
   bottom: 28px;
   font-size: 2rem;
+}
+
+.article-next a small svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 1.15;
 }
 
 /* 404 */
@@ -3126,9 +3139,8 @@ h3 {
     list-style: none;
   }
   .site-menu summary::-webkit-details-marker { display: none; }
-  .site-menu summary span { width: 17px; height: 1px; background: currentColor; transition: rotate 200ms ease, translate 200ms ease; }
-  .site-menu[open] summary span:first-child { rotate: 45deg; translate: 0 3px; }
-  .site-menu[open] summary span:last-child { rotate: -45deg; translate: 0 -3px; }
+  .site-menu summary svg { transition: rotate 220ms ease, color 180ms ease; }
+  .site-menu[open] summary svg { color: var(--accent); rotate: 90deg; }
   .site-menu > div {
     position: fixed;
     top: 88px;

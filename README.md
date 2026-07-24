@@ -1,6 +1,6 @@
-# Asa Zhou — Liquid Archive
+# Asa Zhou — Systems With a Pulse
 
-Asa Zhou 的个人博客与数字花园。新站以 Astro 的静态内容能力为核心，用 React 岛屿承载搜索交互、Three.js 负责 WebGL 场景、GSAP + Lenis 负责动效与滚动编排。
+Asa Zhou 的个人技术作品集与数字花园。站点融合 MeetingRelay、PicSpeak、TokSync、OfferWave 与 PromptCrate 的真实项目内容；以 Astro 的静态内容能力为核心，用 React 岛屿承载搜索交互、Three.js 负责 WebGL 场景、GSAP + Lenis 负责动效与滚动编排。
 
 ## 本地开发
 
@@ -25,8 +25,8 @@ npm run smoke
 - `src/pages/`：首页、写作归档、关于、文章详情、RSS、sitemap 与 404
 - `src/content/posts/`：Markdown 文章内容
 - `src/components/`：搜索命令面板、归档筛选、WebGL 场景与动效运行时
-- `src/styles/global.css`：完整视觉系统、响应式与无动画降级
-- `public/assets/`：站点图标及社交分享视觉
+- `src/styles/global.css` 与 `src/styles/home.css`：完整视觉系统、项目场景、响应式与无动画降级
+- `public/assets/`：站点图标、真实项目截图及社交分享视觉
 
 ## 旧站封存
 

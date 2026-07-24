@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { Aperture, CircleArrowRight, Menu, Orbit } from "@lucide/astro";
 import CommandPalette from "../components/CommandPalette";
 import MotionRuntime from "../components/MotionRuntime.astro";
 import "../styles/global.css";
@@ -32,9 +33,17 @@ const posts = (await getCollection("posts")).sort(
 );
 
 const commandEntries = [
-  { title: "首页 / Threshold", description: "回到液态档案馆入口", href: "/", meta: "PAGE", keywords: ["home", "首页"] },
+  { title: "项目 / Systems", description: "进入个人技术项目现场", href: "/#work", meta: "PAGE", keywords: ["work", "projects", "项目"] },
+  { title: "首页 / Threshold", description: "回到作品集入口", href: "/", meta: "PAGE", keywords: ["home", "首页"] },
   { title: "写作 / Archive", description: "检索全部文章与主题", href: "/writing/", meta: "PAGE", keywords: ["writing", "文章", "归档"] },
   { title: "关于 / About", description: "关于 Asa、方法与正在做的事", href: "/about/", meta: "PAGE", keywords: ["about", "关于"] },
+  ...site.projects.flatMap((project) => project.href ? [{
+    title: project.name,
+    description: project.description,
+    href: project.href,
+    meta: "PROJECT",
+    keywords: [...project.tags, project.eyebrow]
+  }] : []),
   ...posts.map((post) => ({
     title: post.data.title,
     description: post.data.description,
@@ -46,7 +55,7 @@ const commandEntries = [
 
 const schemaData = schema ?? {
   "@context": "https://schema.org",
-  "@type": "Blog",
+  "@type": "WebSite",
   name: site.title,
   url: site.url,
   description,
@@ -69,7 +78,7 @@ const schemaData = schema ?? {
     <meta name="description" content={description} />
     <meta name="theme-color" content="#070806" />
     <meta name="color-scheme" content="dark" />
-    <meta property="og:site_name" content="Asa Zhou — Liquid Archive" />
+    <meta property="og:site_name" content="Asa Zhou — Systems With a Pulse" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={socialImage} />
@@ -104,7 +113,7 @@ const schemaData = schema ?? {
     <div class="intro-curtain" aria-hidden="true">
       <span class="intro-curtain__mark">AZ</span>
       <span class="intro-curtain__line"></span>
-      <small>INDEXING MEMORY / 00</small>
+      <small>CALIBRATING SIGNAL FIELD / 05</small>
     </div>
 
     <div class="global-noise" aria-hidden="true"></div>
@@ -114,34 +123,30 @@ const schemaData = schema ?? {
 
     <header class="site-header" data-site-header>
       <a class="site-brand" href="/" aria-label="Asa Zhou 首页" data-cursor="HOME">
-        <svg class="site-brand__aperture" viewBox="0 0 44 44" aria-hidden="true">
-          <circle cx="22" cy="22" r="18.5" />
-          <circle cx="22" cy="22" r="8" />
-          <path d="M22 3.5v6M40.5 22h-6M22 40.5v-6M3.5 22h6" />
-        </svg>
+        <Aperture class="site-brand__aperture" size={44} stroke-width={1.15} aria-hidden="true" />
         <span>
           <strong>ASA ZHOU</strong>
-          <small>Liquid Archive</small>
+          <small>Systems With a Pulse</small>
         </span>
       </a>
 
       <nav class="site-nav" aria-label="主导航">
         {site.nav.map((item, index) => (
-          <a class={path === item.href ? "is-current" : ""} href={item.href}>
+          <a class={path === item.href || (page === "home" && item.href === "/#work") ? "is-current" : ""} href={item.href}>
             <span>0{index + 1}</span>{item.label}
           </a>
         ))}
       </nav>
 
       <div class="site-actions">
-        <button class="aura-toggle" data-aura-toggle type="button">
-          <span aria-hidden="true"></span>
+        <button class="aura-toggle" data-aura-toggle type="button" aria-label="切换界面光谱">
+          <Orbit size={18} stroke-width={1.5} aria-hidden="true" />
         </button>
         <CommandPalette entries={commandEntries} client:load />
       </div>
 
       <details class="site-menu">
-        <summary aria-label="打开导航"><span></span><span></span></summary>
+        <summary aria-label="打开导航"><Menu size={20} stroke-width={1.5} aria-hidden="true" /></summary>
         <div>
           <p>Navigate / 导航</p>
           {site.nav.map((item, index) => (
@@ -159,10 +164,7 @@ const schemaData = schema ?? {
         <p>Keep a signal.<br />Leave a trace.</p>
         <a class="footer-orbit" href="/writing/" aria-label="进入写作档案" data-cursor="ENTER">
           <span>ENTER ARCHIVE</span>
-          <svg viewBox="0 0 88 88" aria-hidden="true">
-            <circle cx="44" cy="44" r="38" />
-            <path d="M29 44h30M51 36l8 8-8 8" />
-          </svg>
+          <CircleArrowRight size={88} stroke-width={0.8} aria-hidden="true" />
         </a>
       </div>
 

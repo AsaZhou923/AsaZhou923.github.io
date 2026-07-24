@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { ArrowRight, Search } from "lucide-react";
 
 export interface WritingPost {
   title: string;
@@ -60,7 +61,7 @@ export default function WritingExplorer({ posts }: Props) {
         <label className="writing-search">
           <span>Search the archive</span>
           <div>
-            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6" /><path d="m15 15 4.5 4.5" /></svg>
+            <Search aria-hidden="true" size={22} />
             <input
               ref={searchRef}
               type="search"
@@ -113,7 +114,7 @@ export default function WritingExplorer({ posts }: Props) {
             <div className="writing-entry__signal" aria-label={`信号强度 ${post.signal}`}>
               <div><span style={{ "--signal": `${post.signal}%` } as CSSProperties} /></div>
               <strong>{post.signal}</strong>
-              <svg aria-hidden="true" viewBox="0 0 32 32"><path d="M7 16h18M18 9l7 7-7 7" /></svg>
+              <ArrowRight aria-hidden="true" size={32} />
             </div>
           </a>
         ))}

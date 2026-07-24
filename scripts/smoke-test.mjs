@@ -14,6 +14,7 @@ const sourceFiles = [
   "src/components/AetherCanvas.astro",
   "src/components/CommandPalette.tsx",
   "src/components/WritingExplorer.tsx",
+  "src/styles/home.css",
   "src/content.config.ts",
   "src/content/posts/build-a-blog.md",
   "src/content/posts/digital-garden-layers.md",
@@ -21,6 +22,9 @@ const sourceFiles = [
   "public/assets/og-card.svg",
   "public/assets/og-card.png",
   "public/assets/favicon.svg",
+  "public/assets/projects/meetingrelay-icon.svg",
+  "public/assets/projects/picspeak-review.webp",
+  "public/assets/projects/toksync-dashboard.webp",
   "public/robots.txt",
   "_archive/signal-garden-v1/ARCHIVE.md",
   ".github/workflows/deploy.yml"
@@ -28,6 +32,9 @@ const sourceFiles = [
 
 const sourceSnippets = [
   ["src/pages/index.astro", "AetherCanvas"],
+  ["src/pages/index.astro", "MeetingRelay"],
+  ["src/data/site.ts", "PromptCrate"],
+  ["src/pages/index.astro", "@lucide/astro"],
   ["src/pages/writing/index.astro", "WritingExplorer"],
   ["src/layouts/BaseLayout.astro", "CommandPalette"],
   ["src/components/AetherCanvas.astro", "ShaderMaterial"],
@@ -36,7 +43,10 @@ const sourceSnippets = [
   ["src/content.config.ts", "defineCollection"],
   ["src/pages/posts/[slug].astro", "getStaticPaths"],
   ["src/styles/global.css", "prefers-reduced-motion"],
-  ["src/styles/global.css", "view-transition"]
+  ["src/styles/global.css", "view-transition"],
+  ["src/styles/home.css", "work-panel--mint"],
+  ["package.json", "@lucide/astro"],
+  ["package.json", "lucide-react"]
 ];
 
 const distFiles = [
@@ -49,6 +59,9 @@ const distFiles = [
   "dist/assets/og-card.svg",
   "dist/assets/og-card.png",
   "dist/assets/favicon.svg",
+  "dist/assets/projects/meetingrelay-icon.svg",
+  "dist/assets/projects/picspeak-review.webp",
+  "dist/assets/projects/toksync-dashboard.webp",
   "dist/posts/build-a-blog/index.html",
   "dist/posts/digital-garden-layers/index.html",
   "dist/posts/project-copywriting/index.html"

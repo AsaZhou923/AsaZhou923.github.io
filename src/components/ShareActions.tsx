@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Share2 } from "lucide-react";
 
 interface Props {
   title: string;
@@ -25,7 +26,7 @@ export default function ShareActions({ title, url }: Props) {
 
   return (
     <button className="share-button" onClick={share} type="button">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5" /><circle cx="6" cy="12" r="2.5" /><circle cx="18" cy="19" r="2.5" /><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5" /></svg>
+      <Share2 aria-hidden="true" size={18} />
       <span aria-live="polite">{status}</span>
     </button>
   );

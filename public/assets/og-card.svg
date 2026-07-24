@@ -17,8 +17,8 @@
   <circle cx="884" cy="250" r="350" fill="url(#orb)" filter="url(#blur)" opacity=".8"/>
   <path d="M48 48H1152V582H48V48Z" stroke="url(#line)" stroke-opacity=".34"/>
   <path d="M80 520H1120" stroke="#F4F0E8" stroke-opacity=".18"/>
-  <text x="88" y="120" fill="#D9FF57" font-family="monospace" font-size="24" letter-spacing="5">PERSONAL SIGNAL / 2026</text>
+  <text x="88" y="120" fill="#D9FF57" font-family="monospace" font-size="24" letter-spacing="5">SYSTEMS WITH A PULSE / 2026</text>
   <text x="80" y="340" fill="#F4F0E8" font-family="Georgia,serif" font-size="144" letter-spacing="-7">ASA ZHOU</text>
-  <text x="88" y="420" fill="#B8B6AF" font-family="sans-serif" font-size="30" letter-spacing="1">Developer · Writer · Digital Gardener</text>
+  <text x="88" y="420" fill="#B8B6AF" font-family="sans-serif" font-size="30" letter-spacing="1">Product Engineer · Independent Builder</text>
   <text x="88" y="558" fill="#F4F0E8" font-family="monospace" font-size="20">ASAZHOU923.GITHUB.IO</text>
 </svg>

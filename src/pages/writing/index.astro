@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { ArrowUpRight } from "@lucide/astro";
 import WritingExplorer from "../../components/WritingExplorer";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -52,7 +53,7 @@ const writingPosts = posts.map((post) => ({
     <section class="archive-note" data-reveal>
       <span>RSS / ALWAYS ON</span>
       <p>如果你更喜欢安静地跟进更新，可以订阅 RSS。没有算法，没有推送焦虑。</p>
-      <a href="/rss.xml">订阅信号 <b>↗</b></a>
+      <a href="/rss.xml">订阅信号 <ArrowUpRight size={16} aria-hidden="true" /></a>
     </section>
   </main>
 </BaseLayout>

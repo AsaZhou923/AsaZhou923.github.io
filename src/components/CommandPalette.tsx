@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight, Search } from "lucide-react";
 
 export interface CommandEntry {
   title: string;
@@ -125,10 +126,7 @@ export default function CommandPalette({ entries }: Props) {
 
           <label className="command-search">
             <span className="sr-only">搜索站内内容</span>
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="6.5" />
-              <path d="m16 16 4 4" />
-            </svg>
+            <Search aria-hidden="true" size={22} />
             <input
               ref={inputRef}
               value={query}
@@ -151,7 +149,7 @@ export default function CommandPalette({ entries }: Props) {
                   <small>{entry.description}</small>
                 </span>
                 <span className="command-results__meta">{entry.meta}</span>
-                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5" /></svg>
+                <ArrowRight aria-hidden="true" size={22} />
               </button>
             ))}
 
@@ -161,7 +159,7 @@ export default function CommandPalette({ entries }: Props) {
           </div>
 
           <footer className="command-panel__footer">
-            <span><kbd>↵</kbd> 打开</span>
+            <span><kbd>ENTER</kbd> 打开</span>
             <span><kbd>ESC</kbd> 关闭</span>
             <span>{filtered.length} results</span>
           </footer>

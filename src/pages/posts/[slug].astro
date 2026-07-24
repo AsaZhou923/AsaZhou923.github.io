@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "@lucide/astro";
 import ShareActions from "../../components/ShareActions";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { site } from "../../data/site";
@@ -52,7 +53,7 @@ const schema = {
   <main id="main-content" class={`article-page article-page--${post.data.accent}`}>
     <header class="article-cover">
       <div class="article-cover__meta" data-hero-fade>
-        <a href="/writing/">← 返回写作档案</a>
+        <a href="/writing/"><ArrowLeft size={14} aria-hidden="true" />返回写作档案</a>
         <span>ARTICLE / {String(currentIndex + 1).padStart(2, "0")}</span>
         <span>SIGNAL {post.data.signal}</span>
       </div>
@@ -108,7 +109,7 @@ const schema = {
     <section class="article-end" data-reveal>
       <div class="article-end__mark" aria-hidden="true"><span></span><strong>AZ</strong></div>
       <p>这条信号已经抵达终点。</p>
-      <a href="/writing/">返回全部档案 <span>↗</span></a>
+      <a href="/writing/">返回全部档案 <ArrowUpRight size={15} aria-hidden="true" /></a>
     </section>
 
     <nav class="article-next" aria-label="相邻文章">
@@ -116,14 +117,14 @@ const schema = {
         <a href={`/posts/${previousPost.id}/`} data-reveal data-cursor="PREV">
           <span>上一篇</span>
           <strong>{previousPost.data.title}</strong>
-          <small>←</small>
+          <small><ArrowLeft aria-hidden="true" /></small>
         </a>
       ) : <span></span>}
       {nextPost ? (
         <a href={`/posts/${nextPost.id}/`} data-reveal data-cursor="NEXT">
           <span>下一篇</span>
           <strong>{nextPost.data.title}</strong>
-          <small>→</small>
+          <small><ArrowRight aria-hidden="true" /></small>
         </a>
       ) : <span></span>}
     </nav>

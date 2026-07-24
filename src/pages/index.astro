@@ -1,28 +1,45 @@
 ---
 import { getCollection } from "astro:content";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  AudioWaveform,
+  BriefcaseBusiness,
+  Camera,
+  Check,
+  Command,
+  Database,
+  FileText,
+  HardDrive,
+  Languages,
+  LockKeyhole,
+  Mic,
+  Radio,
+  Server,
+  ShieldCheck,
+  Sparkles,
+  UserRoundCheck
+} from "@lucide/astro";
 import AetherCanvas from "../components/AetherCanvas.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../data/site";
+import "../styles/home.css";
 
 const posts = (await getCollection("posts")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
-const latestPost = posts[0];
 const featuredPosts = posts.slice(0, 3);
-const dateLabel = new Intl.DateTimeFormat("zh-CN", {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit"
-}).format(latestPost.data.pubDate);
+const relayBars = [22, 40, 58, 31, 76, 52, 88, 46, 66, 34, 92, 61, 42, 73, 49, 84, 56, 30, 68, 45, 79, 52, 36, 70];
 ---
 
 <BaseLayout page="home">
   <main id="main-content">
     <section class="home-hero" aria-labelledby="hero-title">
       <div class="home-hero__index" data-hero-fade>
-        <span>INDEX / 00</span>
-        <span>PERSONAL SIGNAL</span>
-        <span>MMXXVI</span>
+        <span>PORTFOLIO / 2026</span>
+        <span>INDEPENDENT SYSTEMS</span>
+        <span>TOKYO / OPEN WEB</span>
       </div>
 
       <div class="home-hero__scene" data-parallax="-5">
@@ -35,75 +52,244 @@ const dateLabel = new Intl.DateTimeFormat("zh-CN", {
       </div>
 
       <div class="home-hero__copy" data-hero-fade>
-        <p>Developer · Writer · Digital Gardener</p>
-        <h1>把想法做成<br />可以被体验的现实。</h1>
+        <p>Product Engineer · Independent Builder</p>
+        <h1>把复杂系统做成<br />有触感的产品。</h1>
         <span>
-          我在这里记录代码、设计、产品和独立创作。
-          每一篇文章，都是一次对复杂问题的清晰折射。
+          从本地会议智能、摄影 AI 到隐私优先的开发者数据系统。
+          我同时设计交互、拆解架构，也把它们真正交付。
         </span>
         <div class="home-hero__actions">
-          <a class="action-link action-link--solid" href="/writing/" data-cursor="EXPLORE">
-            <span>进入写作档案</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5" /></svg>
+          <a class="action-link action-link--solid" href="#work" data-cursor="EXPLORE">
+            <span>进入项目现场</span>
+            <ArrowDown aria-hidden="true" />
           </a>
           <a class="action-link" href="/about/" data-cursor="ABOUT">认识我</a>
         </div>
       </div>
 
-      <a class="latest-signal" href={`/posts/${latestPost.id}/`} data-hero-fade data-cursor="READ">
+      <a
+        class="latest-signal"
+        href="https://github.com/AsaZhou923/MeetingRelay/releases/tag/v0.0.1"
+        target="_blank"
+        rel="noreferrer"
+        data-hero-fade
+        data-cursor="RELEASE"
+      >
         <span class="latest-signal__light" aria-hidden="true"></span>
         <div>
-          <p>Latest transmission · {dateLabel}</p>
-          <strong>{latestPost.data.title}</strong>
+          <p>Latest release · 2026.07.24</p>
+          <strong>MeetingRelay v0.0.1</strong>
         </div>
-        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 16h18M18 9l7 7-7 7" /></svg>
+        <ArrowUpRight aria-hidden="true" />
       </a>
 
       <div class="home-hero__scroll" data-hero-fade aria-hidden="true">
-        <span></span>Scroll to decode
+        <span></span>Scroll to enter the field
       </div>
     </section>
 
-    <section class="transmission-bar" aria-label="站点实时信息">
+    <section class="transmission-bar" aria-label="作品集实时信息">
       <div class="transmission-bar__track">
-        <span><i></i> AVAILABLE FOR IDEAS</span>
-        <span>PUBLISHED TO THE OPEN WEB</span>
-        <span>{String(posts.length).padStart(2, "0")} PUBLISHED SIGNALS</span>
-        <span>ASTRO · REACT · THREE.JS</span>
-        <span><i></i> RSS FEED ONLINE</span>
-        <span aria-hidden="true"><i></i> AVAILABLE FOR IDEAS</span>
-        <span aria-hidden="true">PUBLISHED TO THE OPEN WEB</span>
+        <span><i></i> 05 SYSTEMS IN MOTION</span>
+        <span>LOCAL AI · PRIVACY BY DESIGN</span>
+        <span>RUST · TYPESCRIPT · PYTHON · JAVA</span>
+        <span>DESIGN THROUGH DELIVERY</span>
+        <span><i></i> BUILD LOG ONLINE</span>
+        <span aria-hidden="true"><i></i> 05 SYSTEMS IN MOTION</span>
+        <span aria-hidden="true">LOCAL AI · PRIVACY BY DESIGN</span>
       </div>
     </section>
 
     <section class="manifesto" aria-labelledby="manifesto-title">
       <div class="section-marker" data-reveal>
         <span>01</span>
-        <p>Manifesto<br />关于这个空间</p>
+        <p>Field note<br />关于这些作品</p>
       </div>
       <div class="manifesto__body">
         <p class="manifesto__lead" id="manifesto-title" data-reveal>
-          <span>不是一张静态名片，</span>
-          而是一座持续生长的
-          <em>液态档案馆。</em>
+          <span>这里没有虚构案例，</span>
+          只有正在运行的系统、
+          <em>清晰边界与真实证据。</em>
         </p>
         <div class="manifesto__note" data-reveal>
-          <span>THE IDEA</span>
+          <span>THE METHOD</span>
           <p>
-            内容值得被认真阅读，也值得被重新发现。这里用电影化的界面承载长期写作，
-            用代码制造惊喜，用结构保证每一次访问都不迷路。
+            每个项目都从一个具体摩擦开始：会议结束后信息消失、摄影反馈无法进入下一次练习、
+            AI 编程数据不该以隐私换便利。设计给问题形状，工程让答案经得起现实。
           </p>
         </div>
+      </div>
+    </section>
+
+    <section class="work-reel" id="work" data-horizontal aria-labelledby="work-title">
+      <div class="work-reel__track" data-horizontal-track>
+        <article class="work-intro">
+          <div class="section-marker">
+            <span>02</span>
+            <p>Selected systems<br />个人技术项目</p>
+          </div>
+          <div class="work-intro__statement">
+            <p>FIVE PRODUCTS / ONE PRACTICE</p>
+            <h2 id="work-title">Systems<br /><em>with a pulse.</em></h2>
+            <span>产品不是静态展示品，而是持续接受现实压力的活系统。</span>
+          </div>
+          <div class="work-intro__footer">
+            <span>向右滚动探索</span>
+            <ArrowRight aria-hidden="true" />
+          </div>
+        </article>
+
+        {site.projects.map((project) => (
+          <article class={`work-panel work-panel--${project.tone}`} data-project={project.visual}>
+            <header class="work-panel__header">
+              <span>{project.index}</span>
+              <p>{project.eyebrow}</p>
+              <i>{project.status}</i>
+            </header>
+
+            <div class={`work-visual work-visual--${project.visual}`} data-tilt>
+              {project.visual === "relay" && (
+                <>
+                  <div class="relay-console">
+                    <div class="relay-console__bar">
+                      <span><Radio size={14} aria-hidden="true" /> LIVE CAPTURE</span>
+                      <span>LOCAL / 16KHZ</span>
+                    </div>
+                    <div class="relay-console__wave" aria-hidden="true">
+                      {relayBars.map((height, index) => <i style={`--height:${height}%;--delay:${index * -0.07}s`}></i>)}
+                    </div>
+                    <div class="relay-console__transcript">
+                      <p><span>00:42</span><strong>今天先确认发布路径，再处理本地模型。</strong></p>
+                      <p><span>00:47</span><strong>First, verify the release path and local model.</strong></p>
+                    </div>
+                    <div class="relay-console__signals">
+                      <span><Mic size={14} aria-hidden="true" /> MIC + SYSTEM</span>
+                      <span><Languages size={14} aria-hidden="true" /> ZH / JA / EN</span>
+                      <span><HardDrive size={14} aria-hidden="true" /> SQLITE / WAL</span>
+                    </div>
+                  </div>
+                  <img class="relay-console__mark" src="/assets/projects/meetingrelay-icon.svg" alt="" />
+                  <span class="work-visual__coordinate">AUDIO · TEXT · MEMORY</span>
+                </>
+              )}
+
+              {project.visual === "picspeak" && (
+                <>
+                  <div class="product-frame product-frame--picspeak">
+                    <img src={project.image} alt="PicSpeak 摄影点评结果界面" loading="lazy" />
+                  </div>
+                  <div class="photo-score">
+                    <Camera size={17} aria-hidden="true" />
+                    <span><strong>7.4</strong> / 10</span>
+                    <small>COMPOSITION · LIGHT · COLOR</small>
+                  </div>
+                  <span class="work-visual__coordinate">CRITIQUE · RETAKE · GROWTH</span>
+                </>
+              )}
+
+              {project.visual === "toksync" && (
+                <>
+                  <div class="product-frame product-frame--toksync">
+                    <img src={project.image} alt="TokSync 隐私优先 AI 编程用量仪表盘" loading="lazy" />
+                  </div>
+                  <div class="privacy-receipt">
+                    <ShieldCheck size={18} aria-hidden="true" />
+                    <span><strong>PAYLOAD</strong> METRICS ONLY</span>
+                    <small>PROMPTS EXCLUDED</small>
+                  </div>
+                  <span class="work-visual__coordinate">COLLECT · REDACT · SYNC</span>
+                </>
+              )}
+
+              {project.visual === "offerwave" && (
+                <>
+                  <div class="service-map">
+                    <div class="service-node">
+                      <UserRoundCheck size={23} aria-hidden="true" />
+                      <span>AUTH</span>
+                      <small>JWT / RBAC</small>
+                    </div>
+                    <ArrowRight class="service-map__arrow" aria-hidden="true" />
+                    <div class="service-node service-node--active">
+                      <BriefcaseBusiness size={23} aria-hidden="true" />
+                      <span>JOB CORE</span>
+                      <small>TRACK / REVIEW</small>
+                    </div>
+                    <ArrowRight class="service-map__arrow" aria-hidden="true" />
+                    <div class="service-node">
+                      <Database size={23} aria-hidden="true" />
+                      <span>DATA</span>
+                      <small>MYSQL / REDIS</small>
+                    </div>
+                  </div>
+                  <div class="api-trace">
+                    <span><b>POST</b> /api/applications</span>
+                    <span>201 CREATED · 48ms</span>
+                    <code>{`{ status: "TRACKING", source: "USER" }`}</code>
+                  </div>
+                  <span class="work-visual__coordinate">CONTRACT · SERVICE · STATE</span>
+                </>
+              )}
+
+              {project.visual === "promptcrate" && (
+                <>
+                  <div class="prompt-browser">
+                    <div class="prompt-browser__chrome">
+                      <i></i><i></i><i></i>
+                      <span>app.openai.com / compose</span>
+                      <LockKeyhole size={13} aria-hidden="true" />
+                    </div>
+                    <div class="prompt-browser__input">
+                      <p>为这个功能生成一份发布前检查清单</p>
+                      <span><Command size={14} aria-hidden="true" /> K</span>
+                    </div>
+                    <div class="prompt-menu">
+                      <div class="prompt-menu__search">Search private templates</div>
+                      <p class="is-selected"><Sparkles size={15} aria-hidden="true" /><span>Release review</span><kbd>ENTER</kbd></p>
+                      <p><FileText size={15} aria-hidden="true" /><span>Architecture brief</span><kbd>02</kbd></p>
+                      <p><AudioWaveform size={15} aria-hidden="true" /><span>Meeting follow-up</span><kbd>03</kbd></p>
+                    </div>
+                  </div>
+                  <span class="work-visual__coordinate">LOCAL STORAGE · ZERO ACCOUNT</span>
+                </>
+              )}
+            </div>
+
+            <div class="work-panel__content">
+              <div class="work-panel__summary">
+                <p>{project.description}</p>
+                <ul class="work-panel__evidence" aria-label={`${project.name} 项目证据`}>
+                  {project.evidence.map((item) => <li><Check size={13} aria-hidden="true" />{item}</li>)}
+                </ul>
+              </div>
+              <div class="work-panel__identity">
+                <h3>{project.name}</h3>
+                <ul class="work-panel__stack">
+                  {project.tags.map((tag) => <li>{tag}</li>)}
+                </ul>
+                {project.href ? (
+                  <a href={project.href} target="_blank" rel="noreferrer" data-cursor="OPEN">
+                    {project.action}<ArrowUpRight size={16} aria-hidden="true" />
+                  </a>
+                ) : (
+                  <span class="work-panel__pending">
+                    <Server size={15} aria-hidden="true" />{project.action}
+                  </span>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
     </section>
 
     <section class="featured" aria-labelledby="featured-title">
       <header class="section-heading" data-reveal>
         <div>
-          <span>02 / Selected writing</span>
-          <h2 id="featured-title">近期信号</h2>
+          <span>03 / Build notes</span>
+          <h2 id="featured-title">构建现场</h2>
         </div>
-        <p>三篇最近写下的文章。<br />关于构建、思考与让创作持续发生。</p>
+        <p>从产品文案、界面系统到长期写作。<br />记录判断，也记录改变判断的证据。</p>
       </header>
 
       <div class="featured-stack">
@@ -139,49 +325,15 @@ const dateLabel = new Intl.DateTimeFormat("zh-CN", {
               </ul>
             </div>
             <span class="featured-story__arrow">
-              <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 16h18M18 9l7 7-7 7" /></svg>
+              <ArrowRight aria-hidden="true" />
             </span>
           </a>
         ))}
       </div>
 
       <div class="featured__more" data-reveal>
-        <p>还有更多内容正在档案里持续生长。</p>
-        <a href="/writing/" class="text-link">浏览全部文章 <span>↗</span></a>
-      </div>
-    </section>
-
-    <section class="project-reel" data-horizontal aria-labelledby="project-title">
-      <div class="project-reel__track" data-horizontal-track>
-        <article class="project-intro">
-          <div class="section-marker">
-            <span>03</span>
-            <p>Selected lab<br />正在制造</p>
-          </div>
-          <h2 id="project-title">项目不是展示品，<br /><em>是思想的压力测试。</em></h2>
-          <p>向右滚动 / SCROLL TO EXPLORE</p>
-        </article>
-
-        {site.projects.map((project) => (
-          <a class={`project-panel project-panel--${project.tone}`} href={project.href} data-cursor="OPEN">
-            <div class="project-panel__top">
-              <span>{project.index}</span>
-              <span>{project.eyebrow}</span>
-              <i>{project.status}</i>
-            </div>
-            <div class="project-panel__art" aria-hidden="true">
-              <span></span><span></span><span></span>
-              <strong>{project.index}</strong>
-            </div>
-            <div class="project-panel__copy">
-              <div>
-                <p>{project.description}</p>
-                <ul>{project.tags.map((tag) => <li>{tag}</li>)}</ul>
-              </div>
-              <h3>{project.name}</h3>
-            </div>
-          </a>
-        ))}
+        <p>更多决策、实验与复盘，保存在写作档案中。</p>
+        <a href="/writing/" class="text-link">浏览全部文章 <ArrowUpRight size={15} aria-hidden="true" /></a>
       </div>
     </section>
 
@@ -189,9 +341,9 @@ const dateLabel = new Intl.DateTimeFormat("zh-CN", {
       <div class="principles__intro" data-reveal>
         <div class="section-marker">
           <span>04</span>
-          <p>Operating system<br />创作原则</p>
+          <p>Operating system<br />构建原则</p>
         </div>
-        <h2 id="principles-title">做复杂的事，<br />保持简单的路径。</h2>
+        <h2 id="principles-title">让野心可见，<br />让边界诚实。</h2>
       </div>
       <ol>
         {site.principles.map((principle) => (
@@ -209,18 +361,18 @@ const dateLabel = new Intl.DateTimeFormat("zh-CN", {
         <span class="portrait-ring portrait-ring--one"></span>
         <span class="portrait-ring portrait-ring--two"></span>
         <strong>AZ</strong>
-        <small>HUMAN / MAKER / WRITER</small>
+        <small>ENGINEER / DESIGNER / MAKER</small>
       </div>
       <div class="about-teaser__copy" data-reveal>
-        <p>05 / About the author</p>
+        <p>05 / About the builder</p>
         <h2 id="about-teaser-title">你好，<br />我是 Asa。</h2>
         <span>
-          我喜欢把抽象问题变成清晰界面，把零散经验整理成可以复用的文字。
-          这个站点是我的工作台、实验室，也是写给未来自己的长期备忘录。
+          我喜欢在产品、设计与工程之间来回穿梭：先找到真正值得解决的摩擦，
+          再把它做成可以被看见、被使用、也被验证的系统。
         </span>
         <a class="action-link action-link--light" href="/about/" data-cursor="MEET">
           <span>继续认识我</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5" /></svg>
+          <ArrowRight aria-hidden="true" />
         </a>
       </div>
     </section>
